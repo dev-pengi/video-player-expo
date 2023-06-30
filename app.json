@@ -4,6 +4,14 @@
     "web": {
       "bundler": "metro"
     },
+    "plugins": [
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ]
+    ],
     "name": "vid-player",
     "slug": "vid-player"
   }
