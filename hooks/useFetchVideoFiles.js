@@ -3,7 +3,8 @@ import * as MediaLibrary from "expo-media-library";
 import { useExplorerContext } from "../contexts/ExplorerContext";
 
 const useFetchVideoFiles = () => {
-  const { setVideoFiles, setIsLoading, setError } = useExplorerContext();
+  const { setVideoFiles, setIsLoading, setError, setRefreshFiles } =
+    useExplorerContext();
 
   const fetchVideoFiles = async () => {
     setIsLoading(true);
@@ -35,19 +36,6 @@ const useFetchVideoFiles = () => {
         .filter((album) => album)
         .sort((a, b) => b.newestVideoDate - a.newestVideoDate);
 
-      // const updatedVideos = [];
-      // for (const sortedAlbum of sortedAlbums) {
-      //   for (const videoFile of sortedAlbum.videos) {
-      //     const { uri } = await VideoThumbnails.getThumbnailAsync(
-      //       videoFile.uri,
-      //       {
-      //         time: 10,
-      //       }
-      //     );
-      //     updatedVideos.push({ ...videoFile, thumbnail: uri });
-      //   }
-      // }
-
       setVideoFiles(sortedAlbums);
     } catch (error) {
       setError(error);
@@ -64,6 +52,7 @@ const useFetchVideoFiles = () => {
   const refreshFiles = () => {
     fetchVideoFiles();
   };
+  // setRefreshFiles(refreshFiles);
 
   return { refreshFiles };
 };

@@ -4,8 +4,10 @@ export const ExplorerContext = createContext();
 
 export const ExplorerContextProvider = ({ children }) => {
   const [videoFiles, setVideoFiles] = useState([]);
+  const [currentVideo, setCurrentVideo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refreshFiles, setRefreshFiles] = useState(() => {});
 
   return (
     <ExplorerContext.Provider
@@ -16,6 +18,10 @@ export const ExplorerContextProvider = ({ children }) => {
         setIsLoading,
         error,
         setError,
+        refreshFiles,
+        setRefreshFiles,
+        currentVideo,
+        setCurrentVideo,
       }}
     >
       {children}

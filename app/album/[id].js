@@ -12,7 +12,6 @@ import { colors, icons, sizes } from "../../constants";
 
 import { useCallback, useEffect, useState } from "react";
 import { ScreenHeaderBtn } from "../../components";
-import useFetchVideoFiles from "../../hooks/useFetchVideoFiles";
 import { useExplorerContext } from "../../contexts/ExplorerContext";
 
 import VideoCard from "../../components/common/cards/VideoCard/VideoCard";
@@ -24,8 +23,8 @@ const Album = () => {
   const [currentAlbum, setCurrentAlbum] = useState(null);
   const [videos, setVideos] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { refreshFiles } = useFetchVideoFiles();
-  const { videoFiles, isLoading, error } = useExplorerContext();
+  const { videoFiles, isLoading, error, refreshFiles, setCurrentVideo } =
+    useExplorerContext();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -45,6 +44,9 @@ const Album = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.darker }}>
       <Stack.Screen
         options={{
+          animation: "slide_from_bottom",
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
           headerStyle: {
             backgroundColor: colors.dark,
           },
@@ -85,7 +87,10 @@ const Album = () => {
             <VideoCard
               video={video}
               key={index}
-              onNavigate={() => router.push(`player/${video.id}`)}
+              onNavigate={() => {
+                setCurrentVideo(video.id);
+                router.push(`player`);
+              }}
             />
           ))
         )}

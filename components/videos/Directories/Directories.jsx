@@ -19,8 +19,8 @@ import { useExplorerContext } from "../../../contexts/ExplorerContext";
 
 const Directories = ({ navigation }) => {
   const router = useRouter();
-  const { refreshFiles } = useFetchVideoFiles();
-  const { videoFiles, isLoading, error } = useExplorerContext();
+  useFetchVideoFiles();
+  const { videoFiles, isLoading, error, refreshFiles } = useExplorerContext();
 
   const [refreshing, setRefreshing] = useState(false);
 
