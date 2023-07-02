@@ -26,34 +26,7 @@ const VideoPlayer = ({ video, onNavigationBack }) => {
   const videoRef = useRef(null);
 
   const { width, height } = Dimensions.get("window");
-  useEffect(() => {
-    const retrievePlaybackPosition = async () => {
-      try {
-        const storedPosition = await SecureStore.getItemAsync(`playPosition.${video.id}`);
-        console.log(storedPosition);
-        if (storedPosition !== null) {
-          setPlayPosition(parseInt(storedPosition, 10));
-        }
-      } catch (error) {
-        console.log("Error retrieving playback position:", error);
-      }
-    };
 
-    retrievePlaybackPosition();
-  }, [video]);
-
-  useEffect(() => {
-    const storePlaybackPosition = async () => {
-      try {
-        await SecureStore.setItemAsync(`playPosition.${video.id}`, playPosition.toString());
-        console.log("Done stored position");
-      } catch (error) {
-        console.log("Error storing playback position:", error);
-      }
-    };
-
-    storePlaybackPosition();
-  }, [playPosition]);
   useEffect(() => {
     videoRef.current?.presentFullscreenPlayer();
     const enableFullscreen = async () => {
@@ -68,6 +41,8 @@ const VideoPlayer = ({ video, onNavigationBack }) => {
       ScreenOrientation.unlockAsync();
     };
   }, []);
+
+
   function formatVideoDuration(duration) {
     const hours = Math.floor(duration / (60 * 60 * 1000));
     const minutes = Math.floor((duration % (60 * 60 * 1000)) / (60 * 1000));
@@ -85,12 +60,42 @@ const VideoPlayer = ({ video, onNavigationBack }) => {
 
     return formattedDuration;
   }
+  
   const debouncedSetPosition = debounce((value) => {
     setPlayPosition(value);
   }, 20);
   const debouncedHnadleSeek = debounce((value) => {
     videoRef.current?.setPositionAsync(value);
   }, 40);
+  const retrievePlaybackPosition = async () => {
+    try {
+      const storedPosition = await SecureStore.getItemAsync(
+        `playPosition.${video.id}`
+      );
+      console.log(storedPosition);
+      if (storedPosition !== null) {
+        debouncedHnadleSeek(parseInt(storedPosition, 10));
+      }
+    } catch (error) {
+      console.log("Error retrieving playback position:", error);
+    }
+  };
+
+  useEffect(() => {
+    const storePlaybackPosition = async () => {
+      try {
+        await SecureStore.setItemAsync(
+          `playPosition.${video.id}`,
+          playPosition.toString()
+        );
+        console.log("Done stored position");
+      } catch (error) {
+        console.log("Error storing playback position:", error);
+      }
+    };
+
+    storePlaybackPosition();
+  }, [playPosition]);
   const handleSeek = async (direction) => {
     const newPosition =
       direction == "forward" ? playPosition + 10000 : playPosition - 10000;
@@ -120,6 +125,7 @@ const VideoPlayer = ({ video, onNavigationBack }) => {
           onLoad={(videoDetails) => {
             setIsLoading(false);
             setDuration(videoDetails.durationMillis);
+            retrievePlaybackPosition();
           }}
           useNativeControls={false}
           progressUpdateIntervalMillis={200}
