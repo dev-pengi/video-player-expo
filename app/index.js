@@ -25,7 +25,7 @@ const Home = () => {
             ),
             headerRight: () => (
               <View style={{ gap: 6, flexDirection: "row" }}>
-                <ScreenHeaderBtn
+                {/* <ScreenHeaderBtn
                   name={"search"}
                   iconUrl={icons.search}
                   dimension="50%"
@@ -34,7 +34,7 @@ const Home = () => {
                   name={"menu"}
                   iconUrl={icons.menu}
                   dimension="50%"
-                />
+                /> */}
               </View>
             ),
             headerTitle: "",
