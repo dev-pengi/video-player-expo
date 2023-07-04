@@ -56,8 +56,7 @@ const Album = () => {
               style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
             >
               <ScreenHeaderBtn
-                iconUrl={icons.left}
-                dimension="60%"
+                name={"arrow-back"}
                 onPress={() => router.back()}
               />
               <Text
@@ -75,9 +74,9 @@ const Album = () => {
         }}
       />
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
         style={{ paddingTop: sizes.xSmall }}
       >
         {isLoading ? (
