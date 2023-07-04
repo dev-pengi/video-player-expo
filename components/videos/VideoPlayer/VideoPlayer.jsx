@@ -8,14 +8,16 @@ import {
   Dimensions,
 } from "react-native";
 import { Slider, Icon } from "@rneui/themed";
-import { Video, ResizeMode } from "expo-av";
 import { debounce } from "lodash";
 
+import { Video, ResizeMode } from "expo-av";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as SecureStore from "expo-secure-store";
+import * as NavigationBar from "expo-navigation-bar";
+import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 import Button from "../../common/button/Button";
-import { colors, sizes } from "../../../constants";
+import { sizes } from "../../../constants";
 import styles from "./videoPlayer.style";
 import { TouchableWithoutFeedback } from "react-native";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
@@ -65,11 +67,11 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
     }
   }, [currentVideo, albumVideos]);
 
-  //handle skip-next and skip-previous buttons
-
   const handleSkipNext = () => {
     if (nextVideoId) {
       setCurrentVideo(nextVideoId);
+      setIsPlaying(true);
+      setPlayPosition(0);
       setIsLoading(true);
     }
   };
@@ -77,6 +79,8 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
   const handleSkipPrevious = () => {
     if (previousVideoId) {
       setCurrentVideo(previousVideoId);
+      setIsPlaying(true);
+      setPlayPosition(0);
       setIsLoading(true);
     }
   };
@@ -134,11 +138,25 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
         ScreenOrientation.OrientationLock.LANDSCAPE
       );
     };
+    const activateKeepAwake = async () => {
+      await activateKeepAwakeAsync();
+    };
+
+    const hideNavigationBar = async () => {
+      await NavigationBar.setVisibilityAsync("hidden");
+    };
+    const unhideNavigationBar = async () => {
+      await NavigationBar.setVisibilityAsync("visible");
+    };
 
     enableFullscreen();
+    activateKeepAwake();
+    hideNavigationBar();
 
     return () => {
       ScreenOrientation.unlockAsync();
+      deactivateKeepAwake();
+      unhideNavigationBar();
     };
   }, []);
 
@@ -161,6 +179,10 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
       console.log("Error retrieving playback position:", error);
     }
   };
+
+  useEffect(() => {
+    retrievePlaybackPosition();
+  }, [video]);
 
   useEffect(() => {
     const storePlaybackPosition = async () => {
@@ -234,7 +256,6 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
               onLoad={(videoDetails) => {
                 setIsLoading(false);
                 setDuration(videoDetails.durationMillis);
-                retrievePlaybackPosition();
               }}
               useNativeControls={false}
               progressUpdateIntervalMillis={200}
