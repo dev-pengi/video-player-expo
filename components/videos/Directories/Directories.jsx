@@ -16,13 +16,15 @@ import { useRouter } from "expo-router";
 import { icons } from "../../../constants";
 import DirectoryCard from "../../common/cards/DirectoryCard/DirectoryCard";
 import { useExplorerContext } from "../../../contexts/ExplorerContext";
+import { debounce } from "lodash";
 
-const Directories = ({ navigation }) => {
+const Directories = ({ navigation, selectedAlbums, toggleSelect }) => {
   const router = useRouter();
   const { refreshFiles } = useFetchVideoFiles();
   const { videoFiles, isLoading, error } = useExplorerContext();
 
   const [refreshing, setRefreshing] = useState(false);
+
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -50,6 +52,8 @@ const Directories = ({ navigation }) => {
             <DirectoryCard
               key={index}
               album={album}
+              selectedAlbums={selectedAlbums}
+              toggleSelect={toggleSelect}
               onNavigate={() => router.push(`album/${album.id}`)}
             />
           ))}

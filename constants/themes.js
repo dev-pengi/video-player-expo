@@ -1,8 +1,10 @@
 const colors = {
   dark: "#292c33",
   darker: "#22252e",
-
   white: "#b9b9b9",
+
+  soft: "rgba(255, 255, 255, .09)",
+  softStrong: "rgba(255, 255, 255, .49)",
 };
 
 const font = {

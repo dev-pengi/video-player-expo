@@ -8,6 +8,9 @@ export const ExplorerContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refresher, setRefresher] = useState(() => () => {});
+  const [isSelecting, setIsSelecting] = useState(false);
+  // const [selectedAlbums, setSelectedAlbums] = useState([]);
+  // const [selectedVideos, setSelectedVideos] = useState([]);
 
   return (
     <ExplorerContext.Provider
@@ -22,6 +25,8 @@ export const ExplorerContextProvider = ({ children }) => {
         setRefresher,
         currentVideo,
         setCurrentVideo,
+        isSelecting,
+        setIsSelecting,
       }}
     >
       {children}

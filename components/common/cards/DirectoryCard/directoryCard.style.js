@@ -3,12 +3,13 @@ import { StyleSheet } from "react-native";
 import { colors, sizes } from "../../../../constants";
 
 const styles = StyleSheet.create({
-  btnContainer: {
+  btnContainer: (selected) => ({
     height: 55,
     paddingHorizontal: sizes.xSmall / 4,
     flex: 1,
     justifyContent: "center",
-  },
+    backgroundColor: selected ? colors.soft : "transparent",
+  }),
   btnContent: {
     display: "flex",
     flexDirection: "row",
