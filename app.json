@@ -1,10 +1,37 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
+    "name": "Sif player",
+    "slug": "sif-player",
+    "version": "1.0.0",
+    "orientation": "default",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "name": "sif-player",
-    "slug": "sif-player"
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "scheme": "acme",
+    "jsEngine": "hermes",
+    "ios": {
+      "icon": "./assets/icon.png",
+      "supportsTablet": true,
+      "jsEngine": "jsc"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.pengidev.sif_player"
+    },
+    "owner": "pengi-dev",
+    "extra": {
+      "eas": {
+        "projectId": "7204efa3-0b46-4927-9212-6a3faddbab94"
+      }
+    }
   }
 }
