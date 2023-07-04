@@ -10,9 +10,12 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/7204efa3-0b46-4927-9212-6a3faddbab94"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "scheme": "acme",
     "jsEngine": "hermes",
     "ios": {
@@ -32,6 +35,9 @@
       "eas": {
         "projectId": "7204efa3-0b46-4927-9212-6a3faddbab94"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }
