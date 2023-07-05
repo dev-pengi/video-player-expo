@@ -51,9 +51,6 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
       const currentVideoIndex = albumVideos.findIndex(
         (video) => video.id === currentVideo
       );
-      console.log(albumVideos);
-      console.log(currentVideo);
-      console.log(currentVideoIndex);
       if (currentVideoIndex > 0) {
         setPreviousVideoId(albumVideos[currentVideoIndex - 1].id);
       } else {
@@ -71,7 +68,6 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
     if (nextVideoId) {
       setCurrentVideo(nextVideoId);
       setIsPlaying(true);
-      setPlayPosition(0);
       setIsLoading(true);
     }
   };
@@ -80,7 +76,6 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
     if (previousVideoId) {
       setCurrentVideo(previousVideoId);
       setIsPlaying(true);
-      setPlayPosition(0);
       setIsLoading(true);
     }
   };
@@ -181,6 +176,7 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
   };
 
   useEffect(() => {
+    debouncedSetPosition(0);
     retrievePlaybackPosition();
   }, [video]);
 

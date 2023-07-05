@@ -7,29 +7,29 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import Button from "../../common/button/Button";
+import { useRouter } from "expo-router";
 
-import useFetchVideoFiles from "../../../hooks/useFetchVideoFiles";
+import { debounce } from "lodash";
+
+import { useExplorerContext } from "../../../contexts/ExplorerContext";
+
+import DirectoryCard from "../../common/cards/DirectoryCard/DirectoryCard";
 
 import styles from "./directories.style";
-import { useRouter } from "expo-router";
-import { icons } from "../../../constants";
-import DirectoryCard from "../../common/cards/DirectoryCard/DirectoryCard";
-import { useExplorerContext } from "../../../contexts/ExplorerContext";
-import { debounce } from "lodash";
 
 const Directories = ({ navigation, selectedAlbums, toggleSelect }) => {
   const router = useRouter();
-  const { refreshFiles } = useFetchVideoFiles();
-  const { videoFiles, isLoading, error } = useExplorerContext();
+  const { albums, isLoading, error, refreshFiles } = useExplorerContext();
 
   const [refreshing, setRefreshing] = useState(false);
 
-
   const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    refreshFiles();
-    setRefreshing(false);
+    const handleRefrsh = async () => {
+      setRefreshing(true);
+      await refreshFiles();
+      setRefreshing(false);
+    };
+    handleRefrsh();
   }, []);
 
   return (
@@ -48,7 +48,7 @@ const Directories = ({ navigation, selectedAlbums, toggleSelect }) => {
         </View>
       ) : (
         <>
-          {videoFiles?.map((album, index) => (
+          {albums?.map((album, index) => (
             <DirectoryCard
               key={index}
               album={album}

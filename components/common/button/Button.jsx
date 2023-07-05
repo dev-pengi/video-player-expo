@@ -8,6 +8,7 @@ const Button = ({
   delayLongPress = 300,
   children,
   ripples,
+  customRipplesColor,
   style,
   ...restProps
 }) => {
@@ -24,7 +25,13 @@ const Button = ({
       onLongPress={handleLongPress}
       delayLongPress={delayLongPress}
       borderless={true}
-      rippleColor={ripples == "strong" ? colors.softStrong : colors.soft}
+      rippleColor={
+        customRipplesColor
+          ? customRipplesColor
+          : ripples == "strong"
+          ? colors.softStrong
+          : colors.soft
+      }
       activeOpacity={0.4}
       style={style}
       {...restProps}

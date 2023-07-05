@@ -35,6 +35,7 @@ const DirectoryCard = ({ album, onNavigate, selectedAlbums, toggleSelect }) => {
       style={styles.btnContainer(selected)}
       onPress={handlePress}
       onLongPress={handleLongPress}
+      delayLongPress={200}
     >
       <View style={styles.btnContent}>
         <Image source={icons.folder} />

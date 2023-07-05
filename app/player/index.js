@@ -11,7 +11,7 @@ const Player = () => {
   const [video, setVideo] = useState(null);
   const [albumVideos, setAlbumVideos] = useState([]);
 
-  const { videoFiles, currentVideo } = useExplorerContext();
+  const { albums, currentVideo } = useExplorerContext();
   useEffect(() => {
     if (!currentVideo) {
       router.back();
@@ -19,8 +19,8 @@ const Player = () => {
   }, [currentVideo]);
 
   useEffect(() => {
-    if (videoFiles) {
-      const videos = videoFiles.flatMap((album) => album.videos);
+    if (albums) {
+      const videos = albums.flatMap((album) => album.videos);
       const video = videos.find((video) => video.id === currentVideo);
       const albumVideos = videos.filter((v) => v.albumId === video.albumId);
 
@@ -35,7 +35,7 @@ const Player = () => {
         router.back();
       }
     }
-  }, [videoFiles, currentVideo]);
+  }, [albums, currentVideo]);
 
   return (
     <>

@@ -3,12 +3,13 @@ import { StyleSheet } from "react-native";
 import { sizes, colors } from "../../../../constants";
 
 const styles = StyleSheet.create({
-  container: {
+  container: (selected) => ({
     flex: 1,
     color: colors.white,
     paddingVertical: sizes.xSmall,
     paddingHorizontal: sizes.xSmall,
-  },
+    backgroundColor: selected ? colors.soft : "transparent",
+  }),
   contentContainer: {
     flexDirection: "row",
     alignItems: "center",

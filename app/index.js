@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, SafeAreaView, Text } from "react-native";
 
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Haptics from "expo-haptics";
+import * as MediaLibrary from "expo-media-library";
 
 import { ScreenHeaderBtn } from "../components";
-import { colors, icons, sizes } from "../constants";
+import { colors, sizes } from "../constants";
 import Directories from "../components/videos/Directories/Directories";
 import { debounce } from "lodash";
 import { useExplorerContext } from "../contexts/ExplorerContext";
+import { Alert } from "react-native";
 
 const Home = () => {
-  const { videoFiles, isSelecting, setIsSelecting } = useExplorerContext();
+  const { albums, isSelecting, setIsSelecting, refreshFiles } =
+    useExplorerContext();
   const [selectedAlbums, setSelectedAlbums] = useState([]);
 
   const toggleSelect = debounce((id) => {
@@ -33,17 +36,24 @@ const Home = () => {
     }
   }, [selectedAlbums]);
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setSelectedAlbums((oldState) => {
-      return videoFiles.map((album) => album.id);
-    });
-  };
+    setSelectedAlbums(albums);
+  }, [albums]);
 
-  const handleClearSelection = () => {
+  const handleClearSelection = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     setSelectedAlbums([]);
-  };
+  }, []);
+
+  const handleDelete = useCallback(() => {
+    console.log(selectedAlbums);
+    const deleteAlbums = async () => {
+      await MediaLibrary.deleteAlbumsAsync(selectedAlbums, true);
+      await refreshFiles();
+    };
+    deleteAlbums();
+  }, [selectedAlbums]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.darker }}>
@@ -68,7 +78,7 @@ const Home = () => {
                     name={"close"}
                     onPress={handleClearSelection}
                   />
-                  <Text style={{ color: '#ffffff', fontSize: sizes.large }}>
+                  <Text style={{ color: "#ffffff", fontSize: sizes.large }}>
                     {selectedAlbums.length}
                   </Text>
                 </>
@@ -85,7 +95,24 @@ const Home = () => {
             <View style={{ gap: 6, flexDirection: "row" }}>
               {isSelecting ? (
                 <>
-                  <ScreenHeaderBtn name={"delete"} onPress={handleSelectAll} />
+                  <ScreenHeaderBtn
+                    name={"delete"}
+                    onPress={() => {
+                      Alert.alert(
+                        "Confirmation",
+                        "Are you sure you want to proceed?",
+                        [
+                          { text: "Cancel", style: "cancel" },
+                          {
+                            text: "Confirm",
+                            style: "destructive",
+                            onPress: handleDelete,
+                          },
+                        ],
+                        { cancelable: true }
+                      );
+                    }}
+                  />
                   <ScreenHeaderBtn
                     name={"playlist-add-check"}
                     onPress={handleSelectAll}
@@ -94,17 +121,6 @@ const Home = () => {
               ) : (
                 <></>
               )}
-
-              {/* <ScreenHeaderBtn
-                  name={"search"}
-                  iconUrl={icons.search}
-                  dimension="50%"
-                />
-                <ScreenHeaderBtn
-                  name={"menu"}
-                  iconUrl={icons.menu}
-                  dimension="50%"
-                /> */}
             </View>
           ),
           headerTitle: "",
