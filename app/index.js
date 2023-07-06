@@ -38,7 +38,7 @@ const Home = () => {
 
   const handleSelectAll = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setSelectedAlbums(albums);
+    setSelectedAlbums(albums.map((al) => al.id));
   }, [albums]);
 
   const handleClearSelection = useCallback(() => {
