@@ -18,6 +18,7 @@ export const ExplorerContextProvider = ({ children }) => {
       if (status !== "granted") {
         throw new Error("Permission to access location was denied");
       }
+
       const albums = await MediaLibrary.getAlbumsAsync();
 
       const albumsWithVideos = await Promise.all(
@@ -31,7 +32,7 @@ export const ExplorerContextProvider = ({ children }) => {
             return {
               ...album,
               videos: assets,
-              newestVideoDate: assets[0].modificationTime,
+              newestVideoDate: assets.sort((a, b) => b.newestVideoDate - a.newestVideoDate)[0].modificationTime,
             };
           }
         })
