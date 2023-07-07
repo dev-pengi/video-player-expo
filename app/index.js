@@ -5,6 +5,9 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as Haptics from "expo-haptics";
 import * as MediaLibrary from "expo-media-library";
+import * as Permissions from "expo-permissions";
+
+import * as FileSystem from "expo-file-system";
 
 import { ScreenHeaderBtn } from "../components";
 import { colors, sizes } from "../constants";
@@ -18,12 +21,12 @@ const Home = () => {
     useExplorerContext();
   const [selectedAlbums, setSelectedAlbums] = useState([]);
 
-  const toggleSelect = debounce((id) => {
+  const toggleSelect = debounce((album) => {
     setSelectedAlbums((oldState) => {
-      if (oldState.includes(id)) {
-        return oldState.filter((item) => item !== id);
+      if (oldState.map((al) => al.id).includes(album.id)) {
+        return oldState.filter((item) => item.id !== album.id);
       } else {
-        return [...oldState, id];
+        return [...oldState, album];
       }
     });
   }, 100);
@@ -38,7 +41,7 @@ const Home = () => {
 
   const handleSelectAll = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    setSelectedAlbums(albums.map((al) => al.id));
+    setSelectedAlbums(albums);
   }, [albums]);
 
   const handleClearSelection = useCallback(() => {
@@ -47,10 +50,20 @@ const Home = () => {
   }, []);
 
   const handleDelete = useCallback(() => {
-    console.log(selectedAlbums);
+    const albumVideos =
+      selectedAlbums.flatMap((album) => album.videos)?.map((vid) => vid.uri) ??
+      [];
+    console.log(albumVideos);
     const deleteAlbums = async () => {
-      await MediaLibrary.deleteAlbumsAsync(selectedAlbums, true);
-      await refreshFiles();
+      const { status } = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+      if (status) {
+        for (const vid of albumVideos) {
+          await FileSystem.deleteAsync(vid);
+        }
+        await refreshFiles();
+      } else {
+        Alert.alert("Error", "permission for deleting has been denied");
+      }
     };
     deleteAlbums();
   }, [selectedAlbums]);
@@ -99,13 +112,13 @@ const Home = () => {
                     name={"delete"}
                     onPress={() => {
                       Alert.alert(
-                        "Confirmation",
+                        "Delete confirmation",
                         "Are you sure you want to proceed?",
                         [
                           { text: "Cancel", style: "cancel" },
                           {
-                            text: "Confirm",
-                            style: "destructive",
+                            text: "Delete",
+                            style: "default",
                             onPress: handleDelete,
                           },
                         ],

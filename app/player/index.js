@@ -26,10 +26,8 @@ const Player = () => {
 
       video && setVideo(video);
       if (albumVideos) {
-        console.log(albumVideos);
         setAlbumVideos(albumVideos);
       } else {
-        console.log("No album videos");
       }
       if (!video) {
         router.back();

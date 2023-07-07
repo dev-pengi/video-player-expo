@@ -10,20 +10,20 @@ const DirectoryCard = ({ album, onNavigate, selectedAlbums, toggleSelect }) => {
   const [selected, setSelected] = useState(false);
 
   const handleLongPress = () => {
-    toggleSelect(album.id);
+    toggleSelect(album);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
   };
 
   const handlePress = () => {
     if (selectedAlbums.length > 0) {
-      toggleSelect(album.id);
+      toggleSelect(album);
     } else {
       onNavigate();
     }
   };
 
   useEffect(() => {
-    if (selectedAlbums.includes(album.id)) {
+    if (selectedAlbums?.map((alb) => alb.id)?.includes(album.id)) {
       setSelected(true);
     } else {
       setSelected(false);

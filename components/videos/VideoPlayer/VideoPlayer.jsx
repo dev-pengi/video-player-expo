@@ -228,6 +228,7 @@ const VideoPlayer = ({ video, albumVideos, onNavigationBack }) => {
     }
   };
 
+
   return (
     <PinchGestureHandler
       onGestureEvent={() => console.log("pinch started")}
