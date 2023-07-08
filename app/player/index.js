@@ -39,6 +39,7 @@ const Player = () => {
     <>
       <Stack.Screen
         options={{
+          gestureEnabled: false,
           animation: "slide_from_bottom",
           headerShown: false,
         }}
