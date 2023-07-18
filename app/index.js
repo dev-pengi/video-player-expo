@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { View, SafeAreaView, Text } from "react-native";
+import { View, SafeAreaView, Text,Alert  } from "react-native";
+import { debounce } from "lodash";
 
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -11,10 +12,9 @@ import * as FileSystem from "expo-file-system";
 
 import { ScreenHeaderBtn } from "../components";
 import { colors, sizes } from "../constants";
+
 import Directories from "../components/videos/Directories/Directories";
-import { debounce } from "lodash";
 import { useExplorerContext } from "../contexts/ExplorerContext";
-import { Alert } from "react-native";
 
 const Home = () => {
   const { albums, isSelecting, setIsSelecting, refreshFiles } =
